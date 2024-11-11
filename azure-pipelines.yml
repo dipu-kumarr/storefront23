@@ -31,6 +31,18 @@ steps:
 
 - task: PublishTestResults@2
   inputs:
-    testResultsFiles: '**/TEST-*.xml'
-    testRunTitle: 'Python $(PYTHON_VERSION)'
+    testResultsFiles: '**/reports/test-results.xml'
+    testRunTitle: 'Django Tests'
   condition: succeededOrFailed()
+  
+- script: |
+        mkdir -p $(Build.ArtifactStagingDirectory)/build_output
+        echo "Build artifacts go here" > $(Build.ArtifactStagingDirectory)/build_output/output.txt
+  displayName: 'Prepare Build Artifacts'
+
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    artifactName: 'my-artifact'  # Name of the artifact
+    publishLocation: 'Container'  # Store the artifact in the Azure Pipelines container
+    pathToPublish: '$(Build.ArtifactStagingDirectory)/build_output'  # Path to the folder containing files to publish
