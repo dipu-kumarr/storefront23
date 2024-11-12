@@ -15,17 +15,20 @@ steps:
     versionSpec: '3.11'
   displayName: 'use python 3.11'
 
+# Install Microsoft Visual C++ Build Tools (required for compiling mysqlclient)
+- powershell: |
+    Invoke-WebRequest -Uri https://aka.ms/vs/17/release/vs_BuildTools.exe -OutFile vs_BuildTools.exe
+    Start-Process vs_BuildTools.exe -ArgumentList '--quiet', '--wait', '--norestart', '--add', 'Microsoft.VisualStudio.Workload.VCTools' -NoNewWindow -Wait
+  displayName: 'Install Microsoft C++ Build Tools'
+
+# Download MySQL Connector C and add to path
 - powershell: |
     Invoke-WebRequest -Uri https://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-6.1.11-win32.msi -OutFile mysql-connector.msi
     Start-Process msiexec.exe -ArgumentList '/i', 'mysql-connector.msi', '/quiet', '/norestart' -NoNewWindow -Wait
     $env:path += ';C:\Program Files\MySQL\MySQL Connector C 6.1\lib'
   displayName: 'Install MySQL Connector C'
 
-# Install Visual C++ Build Tools (required for compiling mysqlclient)
-- powershell: |
-    Invoke-WebRequest -Uri https://aka.ms/vs/17/release/vc_redist.x64.exe -OutFile vc_redist.x64.exe
-    Start-Process vc_redist.x64.exe -ArgumentList '/install', '/quiet', '/norestart' -NoNewWindow -Wait
-  displayName: 'Install Visual C++ Build Tools'
+
 
 - script: |
     python -m pip install --upgrade pip
