@@ -7,7 +7,7 @@ trigger:
 - main
 
 pool:
-    name: 'Default'            # Replace with the name of your agent pool
+    name: Default            # Replace with the name of your agent pool
     demands:
     - agent.name -equals 'chiku_Agent' 
 
